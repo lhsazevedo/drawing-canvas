@@ -1,0 +1,26 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json
+{
+    "name": "Laravel Vue 20240124 Client Dev Container",
+    "dockerComposeFile": "../../compose.yml",
+    "service": "client",
+    "workspaceFolder": "/app",
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "sh": {
+                        "path": "bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "Vue.volar",
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    },
+
+    "remoteUser": "node"
+}

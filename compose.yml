@@ -1,0 +1,49 @@
+name: Laravel Vue 20240124
+
+services:
+  client:
+    build: docker/client
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/:/app
+
+  api:
+    build: docker/api
+    working_dir: /app
+    volumes:
+      - ./api/:/app
+      - ./api/storage/app/public/:/app/public/storage
+      - ./docker/api/api.ini:/usr/local/etc/php/conf.d/99-api.ini
+
+  api-web:
+    image: nginx:1-alpine
+    volumes:
+      - ./api/:/usr/share/nginx/html:ro
+      - ./api/storage/app/public/:/usr/share/nginx/html/public/storage:ro
+      - ./docker/api-web/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+     - 80:80
+    depends_on:
+      - api
+
+  db:
+    image: mysql:8
+    platform: linux/x86_64
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app
+    volumes:
+      - app_db_data:/var/lib/mysql
+
+  testdb:
+    image: mysql:8
+    platform: linux/x86_64
+    tmpfs: /var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app_testing
+
+volumes:
+  app_db_data:
