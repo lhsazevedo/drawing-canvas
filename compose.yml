@@ -29,21 +29,13 @@ services:
       - api
 
   db:
-    image: mysql:8
+    image: postgres:17.2
     platform: linux/x86_64
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=app
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=app
     volumes:
-      - app_db_data:/var/lib/mysql
-
-  testdb:
-    image: mysql:8
-    platform: linux/x86_64
-    tmpfs: /var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=app_testing
+      - app_db_data:/var/lib/postgresql/data
 
 volumes:
   app_db_data:
