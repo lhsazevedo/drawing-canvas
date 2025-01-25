@@ -3,7 +3,7 @@
     "name": "Laravel Vue 20240124 API Dev Container",
     "dockerComposeFile": "../../compose.yml",
     "service": "api",
-    "workspaceFolder": "/app",
+    "workspaceFolder": "/app/api",
 
     "customizations": {
         "vscode": {

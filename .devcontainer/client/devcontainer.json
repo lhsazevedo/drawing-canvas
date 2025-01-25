@@ -3,7 +3,7 @@
     "name": "Laravel Vue 20240124 Client Dev Container",
     "dockerComposeFile": "../../compose.yml",
     "service": "client",
-    "workspaceFolder": "/app",
+    "workspaceFolder": "/app/client",
 
     "customizations": {
         "vscode": {
