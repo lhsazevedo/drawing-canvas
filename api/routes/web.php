@@ -1,6 +1,40 @@
 <?php
 
-use App\Http\Controllers\DrawingSessionController;
+use App\Http\Controllers\DrawingSession\IndexDrawingSessionController;
+use App\Http\Controllers\DrawingSession\StoreDrawingSessionController;
+use App\Http\Controllers\Stroke\IndexStrokeController;
+use App\Http\Controllers\Stroke\StoreStrokeController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('drawing-sessions', DrawingSessionController::class);
+Route::post('/auth/register', function (Request $request) {
+    $validated = $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:8',
+    ]);
+
+    $validated['password'] = Hash::make($validated['password']);
+
+    $user = User::create($validated + [Hash::make($validated['password'])]);
+
+    return new JsonResource($user);
+});
+
+Route::get('/auth/me', function () {
+    return response()->json([
+        'foo' => 'bar',
+        'user' => auth()->user()
+    ]);
+});
+
+Route::get('/drawing-sessions', IndexDrawingSessionController::class);
+Route::post('/drawing-sessions/{id}', StoreDrawingSessionController::class);
+Route::get('/drawing-sessions/{id}/strokes', IndexStrokeController::class);
+Route::post('/drawing-sessions/{id}/strokes', StoreStrokeController::class);
+// Route::get('/{session}', [DrawingSessionController::class, 'show']);
+// Route::put('/{session}', [DrawingSessionController::class, 'update']);
+// Route::delete('/{session}', [DrawingSessionController::class, 'destroy']);
