@@ -17,7 +17,8 @@
             },
             "extensions": [
                 "xdebug.php-debug",
-                "bmewburn.vscode-intelephense-client"
+                "bmewburn.vscode-intelephense-client",
+                "sanderronde.phpstan-vscode"
             ]
         }
     },
