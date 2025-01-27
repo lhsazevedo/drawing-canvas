@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('drawing_sessions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->string('session_id')
+                ->nullable()
+                ->references('id')->on('sessions')
+                ->constrained();
             $table->string('public_id')->unique();
-            $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->string('description')->nullable();
             $table->boolean(('is_public'))->default(false);

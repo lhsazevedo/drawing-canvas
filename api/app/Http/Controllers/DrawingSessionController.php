@@ -15,7 +15,15 @@ class DrawingSessionController extends Controller
      */
     public function index()
     {
-        // TODO...
+        $query = DrawingSession::query();
+
+        if ($user = auth()->user()) {
+            $query->where('user_id', $user->id);
+        } else {
+            $query->where('session_id', session()->getId());
+        }
+
+        return new JsonResource($query->get());
     }
 
     /**
@@ -25,15 +33,14 @@ class DrawingSessionController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'public_id' => 'required|alpha_dash:ascii',
             'description' => 'nullable|string',
             'is_public' => 'required|boolean',
         ]);
 
-        $session = DrawingSession::create([
+        $session = DrawingSession::create($validated + [
             'public_id' => Str::random(6),
-            'user_id' => auth()->guard()->id(),
-            ...$validated
+            'session_id' => session()->getId(),
+            'user_id' => auth()->user()?->id,
         ]);
 
         return new JsonResource($session);

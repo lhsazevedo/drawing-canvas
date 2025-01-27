@@ -10,13 +10,29 @@ class StoreDrawingSessionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_creates_a_new_drawing_session(): void
+    public function test_user_can_creante_drawing_session(): void
     {
-        $this->actingAs($user = User::factory()->create());
+        $response = $this->actingAs(User::factory()->create())
+            ->postJson('/drawing-sessions', [
+                'name' => 'My Drawing Session',
+                'description' => 'This is a test drawing session',
+                'is_public' => true,
+            ]);
 
+        $response->assertCreated();
+        $this->assertDatabaseHas('drawing_sessions', [
+            'id' => $response->json('data.id'),
+            'user_id' => $response->json('data.user_id'),
+            'name' => 'My Drawing Session',
+            'description' => 'This is a test drawing session',
+            'is_public' => true,
+        ]);
+    }
+
+    public function test_guest_can_create_drawing_session(): void
+    {
         $response = $this->postJson('/drawing-sessions', [
             'name' => 'My Drawing Session',
-            'public_id' => 'my-drawing-session',
             'description' => 'This is a test drawing session',
             'is_public' => true,
         ]);
@@ -24,9 +40,8 @@ class StoreDrawingSessionTest extends TestCase
         $response->assertCreated();
         $this->assertDatabaseHas('drawing_sessions', [
                 'id' => $response->json('data.id'),
-                'user_id' => $response->json('data.user_id'),
+                'user_id' => null,
                 'name' => 'My Drawing Session',
-                'public_id' => 'my-drawing-session',
                 'description' => 'This is a test drawing session',
                 'is_public' => true,
             ]);
@@ -41,7 +56,7 @@ class StoreDrawingSessionTest extends TestCase
         ]);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'public_id', 'is_public']);
+            ->assertJsonValidationErrors(['name', 'is_public']);
 
         $this->assertDatabaseEmpty('drawing_sessions');
     }
@@ -52,14 +67,12 @@ class StoreDrawingSessionTest extends TestCase
 
         $response = $this->postJson('/drawing-sessions', [
             'name' => 'My Drawing Session',
-            'public_id' => 'my-drawing-session',
             'is_public' => true,
         ]);
 
         $response->assertCreated();
         $this->assertDatabaseHas('drawing_sessions', [
             'name' => 'My Drawing Session',
-            'public_id' => 'my-drawing-session',
             'description' => null,
             'is_public' => true,
         ]);
