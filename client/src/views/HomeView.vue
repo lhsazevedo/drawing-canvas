@@ -3,12 +3,13 @@ import Button from '@/components/Button.vue'
 import TextInput from '@/components/TextInput.vue';
 import axios from '@/axios';
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 
 const router = useRouter();
 
 interface DrawingSession {
   id: number;
+  public_id: string;
   name: string;
   description: string;
   is_public: boolean;
@@ -45,15 +46,16 @@ onMounted(async () => {
     <div class="space-y-4">
       <h2 class="text-2xl">Your Canvases</h2>
       <div class="space-y-4">
-        <div
+        <RouterLink
           v-for="session in drawingSessions"
-          :key="session.id"
-          class="rounded-xl border-2 border-black p-4"
+          :to="{ name: 'canvas', params: { id: session.public_id } }"
+          :key="session.public_id"
+          class="rounded-xl border-2 block border-black p-4"
         >
           <h3 class="text-xl">{{ session.name }}</h3>
           <p>{{ session.description }}</p>
           <p>{{ session.is_public ? 'Public' : 'Private' }}</p>
-        </div>
+        </RouterLink>
       </div>
     </div>
   </main>
