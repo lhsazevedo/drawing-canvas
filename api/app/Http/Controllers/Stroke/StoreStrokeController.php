@@ -14,10 +14,10 @@ class StoreStrokeController extends Controller
      */
     public function __invoke(Request $request, $publicId)
     {
-        $request->validate([
-            'stroke.points.*.x' => 'required|int',
-            'stroke.points.*.y' => 'required|int',
-            'stroke.color' => 'required|string',
+        $stroke = $request->validate([
+            'points.*.x' => 'required|int',
+            'points.*.y' => 'required|int',
+            'color' => 'required|string',
         ]);
 
         $drawingSession = DrawingSession::where('public_id', $publicId)
@@ -32,12 +32,12 @@ class StoreStrokeController extends Controller
         }
 
         $drawingSession->strokes()->create([
-            'data' => json_encode($request->input('stroke')),
+            'data' => json_encode($stroke),
         ]);
 
         // TODO: Extract to a class implementing ShouldBroadcast
-        Broadcast::broadcast(['drawing-session.' . $drawingSession->public_id], 'stroke-created', [
-            'stroke' => $request->input('stroke'),
-        ]);
+        Broadcast::broadcast(
+            ['drawing-session.' . $drawingSession->public_id], 'stroke-created', $stroke
+        );
     }
 }
