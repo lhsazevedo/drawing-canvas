@@ -32,9 +32,6 @@ Route::get('/auth/me', function () {
 });
 
 Route::get('/drawing-sessions', IndexDrawingSessionController::class);
-Route::post('/drawing-sessions/{id}', StoreDrawingSessionController::class);
+Route::post('/drawing-sessions', StoreDrawingSessionController::class);
 Route::get('/drawing-sessions/{id}/strokes', IndexStrokeController::class);
 Route::post('/drawing-sessions/{id}/strokes', StoreStrokeController::class);
-// Route::get('/{session}', [DrawingSessionController::class, 'show']);
-// Route::put('/{session}', [DrawingSessionController::class, 'update']);
-// Route::delete('/{session}', [DrawingSessionController::class, 'destroy']);

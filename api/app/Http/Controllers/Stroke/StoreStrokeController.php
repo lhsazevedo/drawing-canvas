@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Stroke;
 use App\Http\Controllers\Controller;
 use App\Models\DrawingSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 
 class StoreStrokeController extends Controller
 {
@@ -32,6 +33,11 @@ class StoreStrokeController extends Controller
 
         $drawingSession->strokes()->create([
             'data' => json_encode($request->input('stroke')),
+        ]);
+
+        // TODO: Extract to a class implementing ShouldBroadcast
+        Broadcast::broadcast(['drawing-session.' . $drawingSession->public_id], 'stroke-created', [
+            'stroke' => $request->input('stroke'),
         ]);
     }
 }

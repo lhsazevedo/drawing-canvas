@@ -3,6 +3,7 @@ import { nextTick, onMounted, onUnmounted, ref, useTemplateRef, watchEffect } fr
 import { getStroke } from 'perfect-freehand';
 import axios from '@/axios';
 import { useRoute } from 'vue-router';
+import Pusher from 'pusher-js';
 
 const canvas = useTemplateRef('canvas');
 
@@ -17,9 +18,18 @@ function updateCanvasSize() {
 
 const strokes = ref<Stroke[]>([]);
 
+interface ApiStrokeData {
+  points: Point[]
+  color: string
+}
+
 interface ApiStrokeResource {
-  id: number;
-  data: string;
+  id: number
+  data: string
+}
+
+interface PusherStrokeCreated {
+  stroke: ApiStrokeData
 }
 
 onMounted(() => {
@@ -29,57 +39,65 @@ onMounted(() => {
   axios.get(`/drawing-sessions/${currentRoute.params.id}/strokes`).then((response) => {
     strokes.value = response.data.data.map((stroke: ApiStrokeResource) => JSON.parse(stroke.data));
   });
-})
+
+  const pusher = new Pusher('app-key', {
+    cluster: 'cluster',
+    forceTLS: false,
+    wsHost: 'localhost',
+    wsPort: 6001,
+    httpHost: 'localhost',
+    httpPort: 6001,
+  });
+  const channel = pusher.subscribe(`drawing-session.${currentRoute.params.id}`);
+  channel.bind('stroke-created', (data: PusherStrokeCreated) => {
+    console.log('Received stroke', data);
+    strokes.value.push(data.stroke);
+  });
+});
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateCanvasSize);
-})
+});
 
 interface Point {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 interface Stroke {
-  points: Point[];
-  color: string;
+  points: Point[]
+  color: string
 }
 
-const average = (a: number, b: number) => (a + b) / 2
+const average = (a: number, b: number) => (a + b) / 2;
 
 function getSvgPathFromStroke(points: number[][], closed = true) {
-  const len = points.length
+  const len = points.length;
 
   if (len < 4) {
-    return ``
+    return ``;
   }
 
-  let a = points[0]
-  let b = points[1]
-  const c = points[2]
+  let a = points[0];
+  let b = points[1];
+  const c = points[2];
 
   let result = `M${a[0].toFixed(2)},${a[1].toFixed(2)} Q${b[0].toFixed(
-    2
-  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(
-    b[1],
-    c[1]
-  ).toFixed(2)} T`
+    2,
+  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(b[1], c[1]).toFixed(2)} T`;
 
   for (let i = 2, max = len - 1; i < max; i++) {
-    a = points[i]
-    b = points[i + 1]
-    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(
-      2
-    )} `
+    a = points[i];
+    b = points[i + 1];
+    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(2)} `;
   }
 
   if (closed) {
-    result += 'Z'
+    result += 'Z';
   }
 
-  return result
+  return result;
 }
-
 
 const currentStroke = ref<Stroke | null>(null);
 
@@ -100,9 +118,7 @@ function onPointerMove(event: PointerEvent) {
   if (!lastPoint) {
     return;
   }
-  const distance = calculateDistance(
-    lastPoint, { x: event.offsetX, y: event.offsetY }
-  );
+  const distance = calculateDistance(lastPoint, { x: event.offsetX, y: event.offsetY });
 
   if (distance < 5) {
     return;
@@ -119,13 +135,13 @@ function onPointerUp() {
     stroke: {
       points: strokes.value[strokes.value.length - 1].points,
       color: strokes.value[strokes.value.length - 1].color,
-    }
+    },
   });
 }
 
 watchEffect(() => {
   drawStrokes();
-})
+});
 
 function drawStrokes() {
   if (!canvas.value) {
@@ -137,19 +153,14 @@ function drawStrokes() {
   }
 
   for (const stroke of strokes.value) {
-    const freehandStroke = getSvgPathFromStroke(
-      getStroke(stroke.points, { size: 10 })
-    );
+    const freehandStroke = getSvgPathFromStroke(getStroke(stroke.points, { size: 10 }));
     ctx.fill(new Path2D(freehandStroke));
   }
   if (currentStroke.value) {
-    const freehandStroke = getSvgPathFromStroke(
-      getStroke(currentStroke.value.points, { size: 10 })
-    );
+    const freehandStroke = getSvgPathFromStroke(getStroke(currentStroke.value.points, { size: 10 }));
     ctx.fill(new Path2D(freehandStroke));
   }
 }
-
 </script>
 
 <template>
