@@ -1,40 +1,39 @@
 <script setup lang="ts">
-import CheckBox from '@/components/CheckBox.vue';
-import TextInput from '@/components/TextInput.vue';
-import Button from '@/components/Button.vue';
-import { reactive } from 'vue';
-import axios from '@/axios';
-import { AxiosError } from 'axios';
-import { useForm } from 'vee-validate';
-import { useRouter } from 'vue-router';
+import CheckBox from '@/components/CheckBox.vue'
+import TextInput from '@/components/TextInput.vue'
+import Button from '@/components/Button.vue'
+import { reactive } from 'vue'
+import axios from '@/axios'
+import { AxiosError } from 'axios'
+import { useForm } from 'vee-validate'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
 const form = reactive({
   name: '',
   description: '',
   is_public: false,
-});
+})
 
-const { handleSubmit, setErrors, errors } = useForm();
+const { handleSubmit, setErrors, errors } = useForm()
 
 const onSubmit = handleSubmit(async () => {
   try {
     await axios.post('/drawing-sessions', form)
-    router.push({ name: 'home' });
+    router.push({ name: 'home' })
   } catch (e) {
     if (!(e instanceof AxiosError)) {
-      console.error(e);
-      return;
+      console.error(e)
+      return
     }
 
     if (e.response?.data?.errors) {
-      setErrors(e.response.data.errors);
-      return;
+      setErrors(e.response.data.errors)
+      return
     }
   }
-});
-
+})
 </script>
 
 <template>
@@ -55,19 +54,9 @@ const onSubmit = handleSubmit(async () => {
           v-model="form.description"
           :error="errors.description"
         />
-        <CheckBox
-          label="Public"
-          v-model="form.is_public"
-          :error="errors.is_public"
-        />
-        <Button
-          class="w-full block"
-          type="submit"
-        >
-          Create!
-        </Button>
+        <CheckBox label="Public" v-model="form.is_public" :error="errors.is_public" />
+        <Button class="w-full block" type="submit"> Create! </Button>
       </form>
     </div>
   </main>
 </template>
-

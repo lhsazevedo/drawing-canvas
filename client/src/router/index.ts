@@ -19,8 +19,8 @@ const router = createRouter({
     {
       path: '/canvas/:id',
       name: 'canvas',
-      component: CanvasView
-    }
+      component: CanvasView,
+    },
   ],
 })
 

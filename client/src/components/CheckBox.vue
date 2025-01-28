@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
-  label?: string,
-  error?: string,
+  label?: string
+  error?: string
 }>()
 
 const modelValue = defineModel<boolean>()
@@ -15,11 +15,7 @@ const modelValue = defineModel<boolean>()
       :class="{ 'border-red-500': error }"
       v-model="modelValue"
     />
-    <label
-      v-if="label"
-      class="text-lg"
-      :class="{ 'text-red-500': error }"
-    >
+    <label v-if="label" class="text-lg" :class="{ 'text-red-500': error }">
       {{ label }}
     </label>
     <div class="text-red-500">{{ error }}</div>

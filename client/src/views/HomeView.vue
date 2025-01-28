@@ -1,44 +1,40 @@
 <script setup lang="ts">
 import Button from '@/components/Button.vue'
-import TextInput from '@/components/TextInput.vue';
-import axios from '@/axios';
-import { onMounted, ref } from 'vue';
-import { useRouter, RouterLink } from 'vue-router';
+import TextInput from '@/components/TextInput.vue'
+import axios from '@/axios'
+import { onMounted, ref } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
 interface DrawingSession {
-  id: number;
-  public_id: string;
-  name: string;
-  description: string;
-  is_public: boolean;
+  id: number
+  public_id: string
+  name: string
+  description: string
+  is_public: boolean
 }
 
-const drawingSessions = ref<DrawingSession[]>([]);
+const drawingSessions = ref<DrawingSession[]>([])
 
 onMounted(async () => {
   const res = await axios.get<{ data: DrawingSession[] }>('/drawing-sessions')
-  drawingSessions.value = res.data.data;
+  drawingSessions.value = res.data.data
 })
-
 </script>
 
 <template>
   <main class="max-w-md mx-auto p-4 space-y-8">
     <h1 class="text-3xl font-bold text-center">Drawing Canvas</h1>
 
-    <Button
-      class="block w-full"
-      @click="() => router.push({ name: 'create' })"
-    >
+    <Button class="block w-full" @click="() => router.push({ name: 'create' })">
       Create new Canvas
     </Button>
 
     <div class="space-y-2">
       <div class="text-lg">Got a code? Enter it below to join</div>
       <div class="flex gap-2">
-        <TextInput class="flex-grow" placeholder="Enter code here"/>
+        <TextInput class="flex-grow" placeholder="Enter code here" />
         <Button>Join</Button>
       </div>
     </div>
