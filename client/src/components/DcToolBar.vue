@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import type { DrawingTool } from '@/types'
 import DcCanvasToolBarButton from './DcToolBarButton.vue'
 
-type Tool = 'pencil' | 'eraser'
-
-const toolModel = defineModel<Tool>('tool', { required: true })
+const toolModel = defineModel<DrawingTool>('tool', { required: true })
 const colorModel = defineModel<string>('color', { required: true })
 const sizeModel = defineModel<number>('size', { required: true })
 const props = defineProps<{
@@ -15,8 +14,8 @@ const props = defineProps<{
 <template>
   <div class="fixed top-2 left-2 p-2 rounded-full bg-white shadow-md flex space-x-2 justify-center">
     <DcCanvasToolBarButton
-      @click="toolModel = 'pencil'"
-      :class="{ 'bg-gray-100': toolModel === 'pencil' }"
+      @click="toolModel = 'pen'"
+      :class="{ 'bg-gray-100': toolModel === 'pen' }"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6">
         <path
@@ -34,7 +33,7 @@ const props = defineProps<{
         />
       </svg>
     </DcCanvasToolBarButton>
-    <template v-if="toolModel === 'pencil'">
+    <template v-if="toolModel === 'pen'">
       <div class="w-px self-stretch bg-gray-200"></div>
       <DcCanvasToolBarButton
         v-for="color in props.colors"

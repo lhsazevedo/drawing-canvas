@@ -11,6 +11,7 @@ class Stroke extends Model
     protected $primaryKey = 'uuid';
 
     protected $casts = [
+        'uuid' => 'string',
         'points' => 'array',
     ];
 

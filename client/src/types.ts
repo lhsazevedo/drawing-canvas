@@ -25,3 +25,5 @@ export interface ApiStrokeResource {
   max_y: number
   points: number[][]
 }
+
+export type DrawingTool = 'pen' | 'eraser'

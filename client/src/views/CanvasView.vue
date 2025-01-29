@@ -15,9 +15,9 @@ const canvas = useTemplateRef('canvas')
 const strokes = ref<Stroke[]>([])
 
 const sessionId = useRoute().params.id as string
-const { saveStroke } = useDrawingSession(sessionId, strokes)
-const { currentStroke, onPointerDown, onPointerMove, onPointerUp, strokeSize, strokeColor } =
-  useStroke(strokes, saveStroke)
+const { saveStroke, eraseStrokes } = useDrawingSession(sessionId, strokes)
+const { currentStroke, onPointerDown, onPointerMove, onPointerUp, strokeSize, strokeColor, tool } =
+  useStroke(strokes, saveStroke, eraseStrokes)
 
 watch([strokes, currentStroke], drawStrokes, {
   deep: true,
@@ -37,6 +37,9 @@ function drawStrokes() {
     throw new Error('Could not get 2d context' + canvas)
   }
 
+  ctx.fillStyle = 'white'
+  ctx.fillRect(0, 0, width.value, height.value)
+
   const drawStroke = (stroke: Stroke) => {
     const freehandStroke = getSvgPathFromStroke(getStroke(stroke.points, { size: stroke.size }))
     ctx.fillStyle = stroke.color
@@ -52,7 +55,6 @@ function drawStrokes() {
 // Toolbar
 const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff']
 const sizes = ref([2, 6, 10])
-const tool = ref<'pencil' | 'eraser'>('pencil')
 </script>
 
 <template>

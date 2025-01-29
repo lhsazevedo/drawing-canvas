@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DrawingSession\IndexDrawingSessionController;
 use App\Http\Controllers\DrawingSession\StoreDrawingSessionController;
+use App\Http\Controllers\Stroke\BatchDeleteStrokesController;
 use App\Http\Controllers\Stroke\IndexStrokeController;
 use App\Http\Controllers\Stroke\StoreStrokeController;
 use App\Models\User;
@@ -35,3 +36,4 @@ Route::get('/drawing-sessions', IndexDrawingSessionController::class);
 Route::post('/drawing-sessions', StoreDrawingSessionController::class);
 Route::get('/drawing-sessions/{id}/strokes', IndexStrokeController::class);
 Route::post('/drawing-sessions/{id}/strokes', StoreStrokeController::class);
+Route::post('/drawing-sessions/{id}/strokes/batch-delete', BatchDeleteStrokesController::class);
