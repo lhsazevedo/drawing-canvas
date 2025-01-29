@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Stroke;
 
+use App\Events\StrokeCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStrokeRequest;
 use App\Models\DrawingSession;
+use App\Models\Stroke;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Broadcast;
@@ -13,42 +16,30 @@ class StoreStrokeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function __invoke(Request $request, $publicId)
+    public function __invoke(StoreStrokeRequest $request, $publicId)
     {
-        $validated = $request->validate([
-            'uuid' => 'required|uuid',
-            'color' => 'required|string',
-            'size' => 'required|int',
-            'points.*' => 'required|array',
-            'points.*.*' => 'required|int',
-            'min_x' => 'required|int',
-            'min_y' => 'required|int',
-            'max_x' => 'required|int',
-            'max_y' => 'required|int',
-        ]);
+        $stroke = $request->validated();
 
-        $drawingSession = DrawingSession::where('public_id', $publicId)
+        $drawingSession = DrawingSession::query()
+            ->where('public_id', $publicId)
             ->firstOrFail();
 
         $user = auth()->user();
-        $isOwner = ($drawingSession->session_id === session()->getId())
-            || ($user && $drawingSession->user_id === $user->id);
+        $belongsToSession = $drawingSession->session_id === session()->getId();
+        $belongsToUser = $user && ($drawingSession->user_id === $user->id);
+        $isOwner = $belongsToSession || $belongsToUser;
 
         if (!$drawingSession->is_public && !$isOwner) {
             abort(403);
         }
 
-        $drawingSession->strokes()->create($validated);
+        $drawingSession->strokes()->create($stroke);
 
-        $resource = new JsonResource($validated);
+        Broadcast::on('drawing-session.' . $drawingSession->public_id)
+            ->as('stroke-created')
+            ->with($stroke)
+            ->sendNow();
 
-        // TODO: Extract to a class implementing ShouldBroadcast
-        Broadcast::broadcast(
-            channels: ['drawing-session.' . $drawingSession->public_id],
-            event: 'stroke-created',
-            payload: $resource->toArray($request),
-        );
-
-        return $resource;
+        return new JsonResource($stroke);
     }
 }

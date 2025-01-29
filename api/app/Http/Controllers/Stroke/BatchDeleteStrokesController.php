@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stroke;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BatchDeleteStrokesRequest;
 use App\Models\DrawingSession;
 use App\Models\Stroke;
 use Illuminate\Http\Request;
@@ -14,19 +15,17 @@ class BatchDeleteStrokesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function __invoke(Request $request, $publicId)
+    public function __invoke(BatchDeleteStrokesRequest $request, $publicId)
     {
-        $validated = $request->validate([
-            'uuids' => 'required|array',
-            'uuids.*' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         $drawingSession = DrawingSession::where('public_id', $publicId)
             ->firstOrFail();
 
         $user = auth()->user();
-        $isOwner = ($drawingSession->session_id === session()->getId())
-            || ($user && $drawingSession->user_id === $user->id);
+        $belongsToSession = $drawingSession->session_id === session()->getId();
+        $belongsToUser = $user && ($drawingSession->user_id === $user->id);
+        $isOwner = $belongsToSession || $belongsToUser;
 
         if (!$drawingSession->is_public && !$isOwner) {
             abort(403);
