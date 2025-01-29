@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CheckBox from '@/components/CheckBox.vue'
-import TextInput from '@/components/TextInput.vue'
-import Button from '@/components/Button.vue'
+import CheckBox from '@/components/DcCheckBox.vue'
+import TextInput from '@/components/DcTextInput.vue'
+import Button from '@/components/DcButton.vue'
 import { reactive } from 'vue'
 import axios from '@/axios'
 import { AxiosError } from 'axios'

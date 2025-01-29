@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '@/components/Button.vue'
-import TextInput from '@/components/TextInput.vue'
+import Button from '@/components/DcButton.vue'
+import TextInput from '@/components/DcTextInput.vue'
 import axios from '@/axios'
 import { onMounted, ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
