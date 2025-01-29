@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Stroke;
 use App\Http\Controllers\Controller;
 use App\Models\DrawingSession;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Broadcast;
 
 class StoreStrokeController extends Controller
@@ -14,10 +15,16 @@ class StoreStrokeController extends Controller
      */
     public function __invoke(Request $request, $publicId)
     {
-        $stroke = $request->validate([
-            'points.*.x' => 'required|int',
-            'points.*.y' => 'required|int',
+        $validated = $request->validate([
+            'uuid' => 'required|uuid',
             'color' => 'required|string',
+            'size' => 'required|int',
+            'points.*' => 'required|array',
+            'points.*.*' => 'required|int',
+            'min_x' => 'required|int',
+            'min_y' => 'required|int',
+            'max_x' => 'required|int',
+            'max_y' => 'required|int',
         ]);
 
         $drawingSession = DrawingSession::where('public_id', $publicId)
@@ -31,13 +38,17 @@ class StoreStrokeController extends Controller
             abort(403);
         }
 
-        $drawingSession->strokes()->create([
-            'data' => json_encode($stroke),
-        ]);
+        $drawingSession->strokes()->create($validated);
+
+        $resource = new JsonResource($validated);
 
         // TODO: Extract to a class implementing ShouldBroadcast
         Broadcast::broadcast(
-            ['drawing-session.' . $drawingSession->public_id], 'stroke-created', $stroke
+            channels: ['drawing-session.' . $drawingSession->public_id],
+            event: 'stroke-created',
+            payload: $resource->toArray($request),
         );
+
+        return $resource;
     }
 }

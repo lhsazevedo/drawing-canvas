@@ -12,11 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('strokes', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->primary();
             $table->foreignId('drawing_session_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->jsonb('data');
+            $table->string('color');
+            $table->tinyInteger('size');
+            $table->integer('min_x');
+            $table->integer('min_y');
+            $table->integer('max_x');
+            $table->integer('max_y');
+            $table->jsonb('points');
             $table->timestamps();
         });
     }

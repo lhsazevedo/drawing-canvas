@@ -3,12 +3,25 @@ export interface Point {
   y: number
 }
 
+export type CompactPoint = [number, number]
+
+export type BoundingBox = { minX: number; minY: number; maxX: number; maxY: number }
+
 export interface Stroke {
-  points: Point[]
+  uuid: string
   color: string
+  size: number
+  boundingBox: BoundingBox
+  points: CompactPoint[]
 }
 
 export interface ApiStrokeResource {
-  id: number
-  data: string // Serialized JSON string
+  uuid: string
+  color: string
+  size: number
+  min_x: number
+  min_y: number
+  max_x: number
+  max_y: number
+  points: number[][]
 }

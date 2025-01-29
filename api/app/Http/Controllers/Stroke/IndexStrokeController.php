@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Stroke;
 
 use App\Http\Controllers\Controller;
 use App\Models\DrawingSession;
-use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +25,6 @@ class IndexStrokeController extends Controller
             abort(403);
         }
 
-        return new JsonResource($drawingSession->strokes);
+        return JsonResource::collection($drawingSession->strokes);
     }
 }

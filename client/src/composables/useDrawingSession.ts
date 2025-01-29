@@ -7,7 +7,18 @@ import { pusher } from '@/pusher'
 export function useDrawingSession(sessionId: string, strokes: Ref<Stroke[]>) {
   onMounted(() => {
     axios.get(`/drawing-sessions/${sessionId}/strokes`).then((response) => {
-      strokes.value = response.data.data.map((stroke: ApiStrokeResource) => JSON.parse(stroke.data))
+      strokes.value = response.data.data.map((stroke: ApiStrokeResource) => ({
+        uuid: stroke.uuid,
+        color: stroke.color,
+        size: stroke.size,
+        boundingBox: {
+          minX: stroke.min_x,
+          minY: stroke.min_y,
+          maxX: stroke.max_x,
+          maxY: stroke.max_y,
+        },
+        points: stroke.points,
+      }))
     })
 
     const channel = pusher.subscribe(`drawing-session.${sessionId}`)
@@ -21,7 +32,17 @@ export function useDrawingSession(sessionId: string, strokes: Ref<Stroke[]>) {
   })
 
   function saveStroke(stroke: Stroke) {
-    axios.post(`/drawing-sessions/${sessionId}/strokes`, stroke)
+    const data: ApiStrokeResource = {
+      uuid: stroke.uuid,
+      color: stroke.color,
+      size: stroke.size,
+      min_x: stroke.boundingBox.minX,
+      min_y: stroke.boundingBox.minY,
+      max_x: stroke.boundingBox.maxX,
+      max_y: stroke.boundingBox.maxY,
+      points: stroke.points,
+    }
+    axios.post(`/drawing-sessions/${sessionId}/strokes`, data)
   }
 
   return {

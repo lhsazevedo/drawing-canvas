@@ -36,7 +36,7 @@ function drawStrokes() {
   }
 
   const drawStroke = (stroke: Stroke) => {
-    const freehandStroke = getSvgPathFromStroke(getStroke(stroke.points, { size: 6 }))
+    const freehandStroke = getSvgPathFromStroke(getStroke(stroke.points, { size: stroke.size }))
     ctx.fill(new Path2D(freehandStroke))
   }
 
