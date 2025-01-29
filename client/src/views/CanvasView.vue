@@ -7,6 +7,7 @@ import type { Stroke } from '@/types'
 import { useDrawingSession } from '@/composables/useDrawingSession'
 import { useStroke } from '@/composables/useStroke'
 import { getSvgPathFromStroke } from '@/utils'
+import DcCanvasToolBar from '@/components/DcToolBar.vue'
 
 const { width, height } = useWindowSize()
 
@@ -15,7 +16,8 @@ const strokes = ref<Stroke[]>([])
 
 const sessionId = useRoute().params.id as string
 const { saveStroke } = useDrawingSession(sessionId, strokes)
-const { currentStroke, onPointerDown, onPointerMove, onPointerUp } = useStroke(strokes, saveStroke)
+const { currentStroke, onPointerDown, onPointerMove, onPointerUp, strokeSize, strokeColor } =
+  useStroke(strokes, saveStroke)
 
 watch([strokes, currentStroke], drawStrokes, {
   deep: true,
@@ -37,6 +39,7 @@ function drawStrokes() {
 
   const drawStroke = (stroke: Stroke) => {
     const freehandStroke = getSvgPathFromStroke(getStroke(stroke.points, { size: stroke.size }))
+    ctx.fillStyle = stroke.color
     ctx.fill(new Path2D(freehandStroke))
   }
 
@@ -45,6 +48,11 @@ function drawStrokes() {
     drawStroke(currentStroke.value)
   }
 }
+
+// Toolbar
+const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff']
+const sizes = ref([2, 6, 10])
+const tool = ref<'pencil' | 'eraser'>('pencil')
 </script>
 
 <template>
@@ -58,4 +66,11 @@ function drawStrokes() {
   >
     Your browser does not support the canvas element.
   </canvas>
+  <DcCanvasToolBar
+    :colors="colors"
+    :sizes="sizes"
+    v-model:tool="tool"
+    v-model:color="strokeColor"
+    v-model:size="strokeSize"
+  />
 </template>

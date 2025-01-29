@@ -3,6 +3,8 @@ import { ref, type Ref } from 'vue'
 
 export function useStroke(strokes: Ref<Stroke[]>, onStrokeCreated?: (stroke: Stroke) => void) {
   const currentStroke = ref<Stroke | null>(null)
+  const strokeSize = ref<number>(2)
+  const strokeColor = ref<string>('#000000')
 
   function calculateDistance(a: CompactPoint, b: CompactPoint) {
     return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
@@ -18,8 +20,8 @@ export function useStroke(strokes: Ref<Stroke[]>, onStrokeCreated?: (stroke: Str
         maxY: event.offsetY,
       },
       points: [[event.offsetX, event.offsetY]],
-      color: 'black',
-      size: 6,
+      color: strokeColor.value,
+      size: strokeSize.value,
     }
   }
 
@@ -53,5 +55,5 @@ export function useStroke(strokes: Ref<Stroke[]>, onStrokeCreated?: (stroke: Str
     onStrokeCreated?.(stroke)
   }
 
-  return { currentStroke, onPointerDown, onPointerMove, onPointerUp }
+  return { currentStroke, onPointerDown, onPointerMove, onPointerUp, strokeSize, strokeColor }
 }
