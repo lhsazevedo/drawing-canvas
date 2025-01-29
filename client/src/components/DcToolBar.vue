@@ -13,9 +13,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    class="fixed bottom-0 left-0 p-2 m-4 rounded-full bg-white border border-gray-200 shadow-lg flex space-x-2 justify-center"
-  >
+  <div class="fixed top-2 left-2 p-2 rounded-full bg-white shadow-md flex space-x-2 justify-center">
     <DcCanvasToolBarButton
       @click="toolModel = 'pencil'"
       :class="{ 'bg-gray-100': toolModel === 'pencil' }"
