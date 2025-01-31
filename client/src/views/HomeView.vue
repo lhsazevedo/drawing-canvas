@@ -4,8 +4,10 @@ import TextInput from '@/components/DcTextInput.vue'
 import axios from '@/axios'
 import { onMounted, ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const auth = useAuthStore()
 
 interface DrawingSession {
   id: number
@@ -21,11 +23,22 @@ onMounted(async () => {
   const res = await axios.get<{ data: DrawingSession[] }>('/drawing-sessions')
   drawingSessions.value = res.data.data
 })
+
+async function logout() {
+  await auth.logout()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
   <main class="max-w-md mx-auto p-4 space-y-8">
-    <h1 class="text-3xl font-bold text-center">Drawing Canvas</h1>
+    <h1 class="text-4xl font-bold text-center">Drawing Canvas</h1>
+
+    <div v-if="auth.isAuthenticated">
+      Hi, {{ auth.name }}!
+      <span class="text-zinc-500 hover:underline cursor-pointer" @click="logout">Not you?</span>
+    </div>
+    <div v-else>Create an account to save your progress!</div>
 
     <Button class="block w-full" @click="() => router.push({ name: 'create' })">
       Create new Canvas
@@ -48,9 +61,11 @@ onMounted(async () => {
           :key="session.public_id"
           class="rounded-xl border-2 block border-black p-4"
         >
-          <h3 class="text-xl">{{ session.name }}</h3>
+          <div class="flex justify-between">
+            <h3 class="text-xl">{{ session.name }}</h3>
+            <div v-if="!session.is_public" class="px-2 text-sm rounded-full border">Private</div>
+          </div>
           <p>{{ session.description }}</p>
-          <p>{{ session.is_public ? 'Public' : 'Private' }}</p>
         </RouterLink>
       </div>
     </div>

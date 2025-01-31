@@ -20,8 +20,8 @@ const { handleSubmit, setErrors, errors } = useForm()
 
 const onSubmit = handleSubmit(async () => {
   try {
-    await axios.post('/drawing-sessions', form)
-    router.push({ name: 'home' })
+    const res = await axios.post('/drawing-sessions', form)
+    router.push({ name: 'canvas', params: { id: res.data.data.id } })
   } catch (e) {
     if (!(e instanceof AxiosError)) {
       console.error(e)
