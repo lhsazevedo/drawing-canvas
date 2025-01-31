@@ -10,13 +10,7 @@ defineProps<{
 
 <template>
   <div>
-    <!-- TODO: Accessible label -->
-    <label
-      v-if="label"
-      :for="id || undefined"
-      class="block text-lg"
-      :class="{ 'text-red-500': error }"
-    >
+    <label v-if="label" :for="id || undefined" :class="[error ? 'text-red-500' : 'text-slate-700']">
       {{ label }}
     </label>
     <input
@@ -25,7 +19,7 @@ defineProps<{
       v-model="modelValue"
       v-bind="$attrs"
       :placeholder="placeholder"
-      class="w-full px-4 py-2 rounded-lg border-2 border-black"
+      class="w-full px-4 py-2 rounded-lg bg-white border border-slate-300"
       :class="{ 'border-red-500': error }"
     />
     <div v-if="error" class="text-red-500">{{ error }}</div>

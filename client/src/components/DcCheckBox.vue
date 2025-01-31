@@ -15,7 +15,7 @@ const modelValue = defineModel<boolean>()
       :class="{ 'border-red-500': error }"
       v-model="modelValue"
     />
-    <label v-if="label" class="text-lg" :class="{ 'text-red-500': error }">
+    <label v-if="label" class="text-sm" :class="[error ? 'text-red-500' : 'text-slate-700']">
       {{ label }}
     </label>
     <div class="text-red-500">{{ error }}</div>

@@ -14,6 +14,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <RouterView v-if="authResolved" />
-  <DcLoading v-else />
+  <div class="min-h-screen bg-slate-50 overflow-auto">
+    <RouterView v-if="authResolved" />
+    <DcLoading v-else />
+  </div>
 </template>

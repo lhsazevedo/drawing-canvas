@@ -7,7 +7,7 @@ import SessionList from './SessionList.vue'
 
 <template>
   <main class="max-w-md mx-auto p-4 space-y-8">
-    <h1 class="text-4xl font-bold text-center">Drawing Canvas</h1>
+    <h1 class="text-3xl text-center text-slate-800">Drawing Canvas</h1>
 
     <UserGreeting />
     <CreateCanvasButton />

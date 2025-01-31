@@ -21,24 +21,24 @@ onMounted(async () => {
 
 <template>
   <div v-if="drawingSessions" class="space-y-4">
-    <h2 class="text-2xl">Your Canvases</h2>
+    <h2 class="text-xl">Your Canvases</h2>
     <div class="space-y-4">
       <RouterLink
         v-for="session in drawingSessions"
         :to="{ name: 'canvas', params: { id: session.public_id } }"
         :key="session.public_id"
-        class="rounded-xl border-2 block border-black p-4"
+        class="block p-4 bg-white rounded-xl shadow-md space-y-1"
       >
         <div class="flex justify-between">
-          <h3 class="text-xl">{{ session.name }}</h3>
+          <h3 class="text-lg">{{ session.name }}</h3>
           <div
             v-if="!session.is_public"
-            class="px-2 text-sm rounded-full border flex items-center justify-center"
+            class="px-1 h-6 text-xs text-slate-500 border-slate-500 rounded-full border flex items-center justify-center"
           >
             Private
           </div>
         </div>
-        <p>{{ session.description }}</p>
+        <p class="text-slate-500 text-sm">{{ session.description }}</p>
       </RouterLink>
     </div>
   </div>

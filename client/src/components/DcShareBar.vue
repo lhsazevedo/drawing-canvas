@@ -20,7 +20,7 @@ function share() {
     class="fixed bottom-2 left-2 py-2 px-4 rounded-full bg-white shadow-md flex space-x-2 justify-center items-center"
   >
     <div>Invite code:</div>
-    <div class="flex items-center h-6 text-sm bg-gray-100 px-2 rounded-md">
+    <div class="flex items-center h-6 text-sm bg-slate-100 px-2 rounded-md">
       {{ copied ? 'Copied!' : sessionID }}
     </div>
 

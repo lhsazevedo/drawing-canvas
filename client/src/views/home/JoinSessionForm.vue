@@ -24,8 +24,8 @@ async function join() {
 </script>
 
 <template>
-  <div class="space-y-2">
-    <div class="text-lg">Got a code? Enter it below to join</div>
+  <div class="space-y-2 bg-white p-4 rounded-xl shadow-md">
+    <div>Got a code? Enter it below to join</div>
     <div class="flex gap-2 items-start">
       <DcTextInput
         v-model="code"

@@ -36,8 +36,8 @@ const onSubmit = handleSubmit(async () => {
 </script>
 
 <template>
-  <div class="max-w-sm mx-auto p-4 space-y-8">
-    <div class="text-3xl font-bold text-center">Sign Up</div>
+  <div class="max-w-sm mx-auto p-4 my-8 space-y-8 bg-white rounded-xl shadow-md">
+    <div class="text-2xl text-center text-slate-700">Sign Up</div>
 
     <form class="space-y-4" @submit="onSubmit">
       <DcTextInput
