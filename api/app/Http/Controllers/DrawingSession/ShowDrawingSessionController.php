@@ -20,7 +20,7 @@ class ShowDrawingSessionController extends Controller
         $belongsToUser = $user && ($drawingSession->user_id === $user->id);
         $isOwner = $belongsToSession || $belongsToUser;
 
-        if (!$drawingSession->is_public && !$isOwner) {
+        if (! $drawingSession->is_public && ! $isOwner) {
             abort(403);
         }
 

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BatchDeleteStrokesRequest;
 use App\Models\DrawingSession;
 use App\Models\Stroke;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Broadcast;
 
 class BatchDeleteStrokesController extends Controller
@@ -27,7 +25,7 @@ class BatchDeleteStrokesController extends Controller
         $belongsToUser = $user && ($drawingSession->user_id === $user->id);
         $isOwner = $belongsToSession || $belongsToUser;
 
-        if (!$drawingSession->is_public && !$isOwner) {
+        if (! $drawingSession->is_public && ! $isOwner) {
             abort(403);
         }
 
@@ -41,7 +39,7 @@ class BatchDeleteStrokesController extends Controller
 
         // TODO: Extract to a class implementing ShouldBroadcast
         Broadcast::broadcast(
-            channels: ['drawing-session.' . $drawingSession->public_id],
+            channels: ['drawing-session.'.$drawingSession->public_id],
             event: 'strokes-deleted',
             payload: ['uuids' => $uuids],
         );

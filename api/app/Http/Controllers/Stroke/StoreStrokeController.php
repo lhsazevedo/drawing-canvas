@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Stroke;
 
-use App\Events\StrokeCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStrokeRequest;
 use App\Models\DrawingSession;
-use App\Models\Stroke;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -29,13 +26,13 @@ class StoreStrokeController extends Controller
         $belongsToUser = $user && ($drawingSession->user_id === $user->id);
         $isOwner = $belongsToSession || $belongsToUser;
 
-        if (!$drawingSession->is_public && !$isOwner) {
+        if (! $drawingSession->is_public && ! $isOwner) {
             abort(403);
         }
 
         $drawingSession->strokes()->create($stroke);
 
-        Broadcast::on('drawing-session.' . $drawingSession->public_id)
+        Broadcast::on('drawing-session.'.$drawingSession->public_id)
             ->as('stroke-created')
             ->with($stroke)
             ->sendNow();

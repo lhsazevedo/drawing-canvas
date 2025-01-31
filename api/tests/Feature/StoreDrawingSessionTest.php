@@ -39,12 +39,12 @@ class StoreDrawingSessionTest extends TestCase
 
         $response->assertCreated();
         $this->assertDatabaseHas('drawing_sessions', [
-                'id' => $response->json('data.id'),
-                'user_id' => null,
-                'name' => 'My Drawing Session',
-                'description' => 'This is a test drawing session',
-                'is_public' => true,
-            ]);
+            'id' => $response->json('data.id'),
+            'user_id' => null,
+            'name' => 'My Drawing Session',
+            'description' => 'This is a test drawing session',
+            'is_public' => true,
+        ]);
     }
 
     public function test_some_fields_are_required(): void

@@ -21,7 +21,7 @@ class IndexStrokeController extends Controller
         $isOwner = ($drawingSession->session_id === session()->getId())
             || ($user && $drawingSession->user_id === $user->id);
 
-        if (!$drawingSession->is_public && !$isOwner) {
+        if (! $drawingSession->is_public && ! $isOwner) {
             abort(403);
         }
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/me', function () {
     return response()->json([
-        'data' => auth()->user()
+        'data' => auth()->user(),
     ]);
 });
 
