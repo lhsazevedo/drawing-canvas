@@ -1,6 +1,6 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json
 {
-    "name": "Laravel Vue 20240124 Client Dev Container",
+    "name": "Drawing Canvas Client Dev Container",
     "dockerComposeFile": "../../compose.yml",
     "service": "client",
     "workspaceFolder": "/app/client",
