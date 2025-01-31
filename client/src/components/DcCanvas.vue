@@ -8,6 +8,7 @@ import { useDrawingSession } from '@/composables/useDrawingSession'
 import { useStroke } from '@/composables/useStroke'
 import { getSvgPathFromStroke } from '@/utils'
 import DcCanvasToolBar from '@/components/DcToolBar.vue'
+import DcShareBar from './DcShareBar.vue'
 
 const { width, height } = useWindowSize()
 
@@ -75,4 +76,5 @@ const sizes = ref([2, 6, 10])
     v-model:color="strokeColor"
     v-model:size="strokeSize"
   />
+  <DcShareBar :sessionID="sessionId" />
 </template>
