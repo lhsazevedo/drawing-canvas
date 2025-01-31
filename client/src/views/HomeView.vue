@@ -5,6 +5,7 @@ import axios from '@/axios'
 import { onMounted, ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { AxiosError } from 'axios'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -28,6 +29,20 @@ async function logout() {
   await auth.logout()
   router.push({ name: 'login' })
 }
+
+const code = ref('')
+const codeError = ref<string | undefined>(undefined)
+async function join() {
+  try {
+    await axios.get(`/drawing-sessions/${code.value}`)
+    router.push({ name: 'canvas', params: { id: code.value } })
+  } catch (e) {
+    if (e instanceof AxiosError && e.response?.status === 404) {
+      codeError.value = "We couldn't find that session. Please check the code and try again."
+    }
+    throw e
+  }
+}
 </script>
 
 <template>
@@ -46,9 +61,14 @@ async function logout() {
 
     <div class="space-y-2">
       <div class="text-lg">Got a code? Enter it below to join</div>
-      <div class="flex gap-2">
-        <DcTextInput class="flex-grow" placeholder="Enter code here" />
-        <DcButton>Join</DcButton>
+      <div class="flex gap-2 items-start">
+        <DcTextInput
+          v-model="code"
+          :error="codeError"
+          class="flex-grow"
+          placeholder="Enter code here"
+        />
+        <DcButton @click="join">Join</DcButton>
       </div>
     </div>
 
