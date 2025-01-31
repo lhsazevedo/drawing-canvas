@@ -28,4 +28,11 @@ export interface ApiStrokeResource {
   points: number[][]
 }
 
+export interface ApiDrawingSessionResource {
+  id: number,
+  name: '',
+  description: '',
+  is_public: false,
+}
+
 export type DrawingTool = 'pen' | 'eraser'

@@ -5,15 +5,19 @@ import axios from '@/axios'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { AxiosError } from 'axios'
+import type DrawingSessionApiResource from '~/types.ts'
 
 const route = useRoute()
 const router = useRouter()
 const sessionId = route.params.id as string
 const loading = ref(true)
 
+const drawingSession = ref<DrawingSessionApiResource | null>(null)
+
 onMounted(async () => {
   try {
-    await axios.get(`/drawing-sessions/${sessionId}`)
+    const response = await axios.get(`/drawing-sessions/${sessionId}`)
+    drawingSession.value = response.data.data
     loading.value = false
   } catch (e) {
     loading.value = false
@@ -28,5 +32,5 @@ onMounted(async () => {
 
 <template>
   <DcLoading v-if="loading"></DcLoading>
-  <DcCanvas v-else />
+  <DcCanvas :share-bar="drawingSession.is_public" v-else />
 </template>

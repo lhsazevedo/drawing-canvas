@@ -10,6 +10,10 @@ import { getSvgPathFromStroke } from '@/utils'
 import DcCanvasToolBar from '@/components/DcToolBar.vue'
 import DcShareBar from './DcShareBar.vue'
 
+defineProps<{
+  shareBar: boolean
+}>()
+
 const { width, height } = useWindowSize()
 
 const canvas = useTemplateRef('canvas')
@@ -76,5 +80,5 @@ const sizes = ref([2, 6, 10])
     v-model:color="strokeColor"
     v-model:size="strokeSize"
   />
-  <DcShareBar :sessionID="sessionId" />
+  <DcShareBar v-if="shareBar" :sessionID="sessionId" />
 </template>
