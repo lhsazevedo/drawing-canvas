@@ -28,6 +28,6 @@ defineProps<{
       class="w-full px-4 py-2 rounded-lg border-2 border-black"
       :class="{ 'border-red-500': error }"
     />
-    <div class="text-red-500">{{ error }}</div>
+    <div v-if="error" class="text-red-500">{{ error }}</div>
   </div>
 </template>

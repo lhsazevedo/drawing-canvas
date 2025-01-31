@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CheckBox from '@/components/DcCheckBox.vue'
-import TextInput from '@/components/DcTextInput.vue'
-import Button from '@/components/DcButton.vue'
+import DcTextInput from '@/components/DcTextInput.vue'
+import DcButton from '@/components/DcButton.vue'
 import { reactive } from 'vue'
 import axios from '@/axios'
 import { AxiosError } from 'axios'
@@ -42,20 +42,20 @@ const onSubmit = handleSubmit(async () => {
 
     <div class="">
       <form class="space-y-4" @submit="onSubmit">
-        <TextInput
+        <DcTextInput
           label="Canvas name"
           placeholder="e.g. My first canvas"
           v-model="form.name"
           :error="errors.name"
         />
-        <TextInput
+        <DcTextInput
           label="Description (optional)"
           placeholder="e.g. My first canvas"
           v-model="form.description"
           :error="errors.description"
         />
         <CheckBox label="Public" v-model="form.is_public" :error="errors.is_public" />
-        <Button class="w-full block" type="submit"> Create! </Button>
+        <DcButton class="w-full block" type="submit"> Create! </DcButton>
       </form>
     </div>
   </main>

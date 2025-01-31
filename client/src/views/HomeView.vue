@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '@/components/DcButton.vue'
-import TextInput from '@/components/DcTextInput.vue'
+import DcButton from '@/components/DcButton.vue'
+import DcTextInput from '@/components/DcTextInput.vue'
 import axios from '@/axios'
 import { onMounted, ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
@@ -40,19 +40,19 @@ async function logout() {
     </div>
     <div v-else>Create an account to save your progress!</div>
 
-    <Button class="block w-full" @click="() => router.push({ name: 'create' })">
+    <DcButton class="block w-full" @click="() => router.push({ name: 'create' })">
       Create new Canvas
-    </Button>
+    </DcButton>
 
     <div class="space-y-2">
       <div class="text-lg">Got a code? Enter it below to join</div>
       <div class="flex gap-2">
-        <TextInput class="flex-grow" placeholder="Enter code here" />
-        <Button>Join</Button>
+        <DcTextInput class="flex-grow" placeholder="Enter code here" />
+        <DcButton>Join</DcButton>
       </div>
     </div>
 
-    <div class="space-y-4">
+    <div v-if="drawingSessions" class="space-y-4">
       <h2 class="text-2xl">Your Canvases</h2>
       <div class="space-y-4">
         <RouterLink
@@ -63,7 +63,12 @@ async function logout() {
         >
           <div class="flex justify-between">
             <h3 class="text-xl">{{ session.name }}</h3>
-            <div v-if="!session.is_public" class="px-2 text-sm rounded-full border">Private</div>
+            <div
+              v-if="!session.is_public"
+              class="px-2 text-sm rounded-full border flex items-center justify-center"
+            >
+              Private
+            </div>
           </div>
           <p>{{ session.description }}</p>
         </RouterLink>
