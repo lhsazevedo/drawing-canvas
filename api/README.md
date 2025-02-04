@@ -1,1 +1,0 @@
-# Drawing Canvas API server

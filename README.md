@@ -15,6 +15,7 @@ A demo collaborative drawing canvas application built with Laravel and Vue 3.
 
 ## Todos
 - Document API endpoints.
+- Add unit and end-to-end tests.
 - In-memory database: store incoming strokes in memory and persist them to the database in batches.
 - Canvas controls: Implement pan and zoom controls for an infinite canvas.
 - Color picker: Allow users to select any color.
